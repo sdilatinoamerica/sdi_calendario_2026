@@ -391,11 +391,43 @@
 
             <!-- Download Section -->
             <div class="download-section">
-                <a href="calendario-2026.pdf" download="Calendario-TDI-SDI-2026.pdf" class="download-btn">
+                <a href="./calendario-2026.pdf" download="Calendario-TDI-SDI-2026.pdf" class="download-btn" id="downloadBtn">
                     <span class="download-icon">📥</span>
                     Descargar Calendario PDF
                 </a>
             </div>
+
+            <script>
+                // Asegurar que la descarga funcione correctamente
+                document.getElementById('downloadBtn').addEventListener('click', function(e) {
+                    // Si el PDF no se encuentra, intentar con diferentes rutas
+                    const pdfPath = './calendario-2026.pdf';
+                    
+                    fetch(pdfPath)
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('PDF no encontrado');
+                            }
+                            return response.blob();
+                        })
+                        .then(blob => {
+                            const url = window.URL.createObjectURL(blob);
+                            const a = document.createElement('a');
+                            a.href = url;
+                            a.download = 'Calendario-TDI-SDI-2026.pdf';
+                            document.body.appendChild(a);
+                            a.click();
+                            window.URL.revokeObjectURL(url);
+                            document.body.removeChild(a);
+                        })
+                        .catch(error => {
+                            console.error('Error al descargar:', error);
+                            alert('Por favor, asegúrate de que el archivo "calendario-2026.pdf" está en la carpeta raíz del proyecto.');
+                        });
+                    
+                    e.preventDefault();
+                });
+            </script>
 
             <!-- Features Grid -->
             <div class="features-grid">
